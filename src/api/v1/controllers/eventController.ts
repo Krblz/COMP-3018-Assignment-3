@@ -12,11 +12,6 @@ export const getAllEvents = (req: Request, res: Response) => {
 export const getEventById = (req: Request, res: Response) => {
     let id = Number(req.params.id)
 
-    if (Number.isNaN(id)) {
-        res.status(HTTP_STATUS.BAD_REQUEST).json({ error: "ID must be a Number" });
-        return;
-    }
-
     let result = getEventByIdService(id)
 
     if (result === undefined) {
@@ -35,14 +30,14 @@ export const createEvent = (req: Request, res: Response) => {
 
 export const updateEvent = (req: Request, res: Response) => {
     let newEvent = req.body
-    let id = Number(req.params.id)
+    let id = req.params.id
 
     let result = updateEventService(id, newEvent)
     res.status(200).json(result);
 };
 
 export const deleteEvent = (req: Request, res: Response) => {
-    let id = Number(req.params.id)
+    let id = req.params.id
     let result = deleteEventService(id)
     res.status(200).json(result);
 };
