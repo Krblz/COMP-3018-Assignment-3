@@ -37,10 +37,10 @@ export const updateEventService = (
         name: string,
         date: Date,
         capacity: number,
-        registrationCount: number,
-        status: string,
-        category: string,
-        updatedAt: Date
+        registrationCount?: number,
+        status?: string,
+        category?: string,
+        updatedAt?: Date
     ): Event | undefined => {
     let event = events.find(x => x.id === id);
 

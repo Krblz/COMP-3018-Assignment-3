@@ -1,10 +1,17 @@
 import { Request, Response } from "express";
 import { getAllEventsService, getEventByIdService, createEventService, updateEventService, deleteEventService } from "../services/eventService"
-import {HTTP_STATUS} from "../../../constants/httpConstants"
+import { HTTP_STATUS } from "../../../constants/httpConstants"
+import { Post } from "../models/postModel";
+import { successResponse } from "../models/responseModel";
 
 export const getAllEvents = (req: Request, res: Response) => {
     // Logic to get all items
-
+    try {
+        const posts: Post[] = await postService.getPosts();
+        res.status(200).json(successResponse(posts));
+    } catch (error: unknown) {
+        next(error);
+    }
     let result = getAllEventsService()
     res.status(HTTP_STATUS.OK).json(result);
 };

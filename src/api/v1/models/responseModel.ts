@@ -1,0 +1,25 @@
+export interface PostResponse {
+    id: string;
+    name: string;
+    date: string;
+    capacity: number;
+    registrationCount: number;
+    status: string;
+    category: string;
+    createdAt: string;
+    updatedAt: string;
+}
+/**
+ * Creates a success response object.
+ * @template T - The type of the data property.
+ * @param {T} [data] - The data to include in the response.
+ * @param {string} [message] - A message providing additional information about the response.
+ * @returns {ApiResponse<T | {}>} The success response object.
+ */
+export const successResponse = <T>(
+    data?: T /** The data to include in the response. */,
+    message?: string /** A message providing additional information about the response. */
+    ): ApiResponse<T> => ({
+    message,
+    data,
+});
