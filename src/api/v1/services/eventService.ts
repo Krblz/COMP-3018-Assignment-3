@@ -1,4 +1,4 @@
-import { events } from "../../../data/eventData"
+import { addDocument } from "../repositories/eventRepository";
  
 export interface Event {
     id: string,
@@ -18,7 +18,7 @@ interface EventsCount {
 }
 
 export const getAllEventsService = (): EventsCount => {
-    return {events: events, count: events.length};
+    return {count: events.length, events: events};
 };
 
 export const getEventByIdService = (id: string): Event | undefined => {
@@ -28,19 +28,13 @@ export const getEventByIdService = (id: string): Event | undefined => {
 };
 
 export const createEventService = (newEvent: Event): Event => {
-    events.push(newEvent)
+    addDocument();
     return newEvent;
 };
 
 export const updateEventService = (
         id: string, 
-        name: string,
-        date: Date,
-        capacity: number,
-        registrationCount?: number,
-        status?: string,
-        category?: string,
-        updatedAt?: Date
+        eventData: Partial<Event>
     ): Event | undefined => {
     let event = events.find(x => x.id === id);
 
@@ -48,25 +42,24 @@ export const updateEventService = (
         return undefined;
     }
 
-    if (name !== undefined) event.name = name;
-    if (date !== undefined) event.description = date;
-    if (capacity !== undefined) event.capacity = capacity;
-    if (registrationCount !== undefined) event.capacity = capacity;
-    if (status !== undefined) event.status = status;
-    if (category !== undefined) event.capacity = capacity;
-    if (updatedAt !== undefined) event.updatedAt = new Date().toISOString();;
+    if (eventData.name !== undefined) event.name = eventData.name;
+    if (eventData.date !== undefined) event.description = eventData.date;
+    if (eventData.capacity !== undefined) event.capacity = eventData.capacity;
+    if (eventData.registrationCount !== undefined) event.capacity = eventData.registrationCount;
+    if (eventData.status !== undefined) event.status = eventData.status;
+    if (eventData.category !== undefined) event.capacity = eventData.category;
+    event.updatedAt = new Date();
     
     return event;
 };
 
-export const deleteEventService = (id: number) => {
-    let eventToDelete = events.findIndex(x => x.id === id);
+export const deleteEventService = (id: string): boolean => {
+    let eventIndex = events.findIndex(x => x.id === id);
 
-    if (eventToDelete === -1) {
+    if (eventIndex === -1) {
         return false;
     }
 
-    events.splice(eventToDelete, 1)
-
-    return;
+    events.splice(eventIndex, 1);
+    return true;
 };

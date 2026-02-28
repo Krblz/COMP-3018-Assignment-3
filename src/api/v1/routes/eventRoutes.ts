@@ -1,10 +1,10 @@
-import express from "express";
-import { getAllEventsService, getEventByIdService, createEventService, updateEventService, deleteEventService } from "../services/eventService"
-import { validateRequest } from "../middleware/validate";
-import * as postController from "../controllers/postController";
-import { postSchemas } from "../validation/postSchemas";
+import { Router } from "express";
+import { getAllEvents, getEventById, createEvent, updateEvent, deleteEvent } from "../controllers/eventController"
+// import { validateRequest } from "../middleware/validate";
+// import * as postController from "../controllers/postController";
+// import { postSchemas } from "../validation/postSchemas";
 
-const router = express.Router();
+const router: Router = Router();
 
 router.get('/events', getAllEvents);
 router.get('/events/:id', getEventById);
