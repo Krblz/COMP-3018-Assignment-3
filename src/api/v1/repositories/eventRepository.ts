@@ -1,73 +1,123 @@
-import { db } from "src/config/firebaseConfig";
+import { db } from "../../../../config/firebaseConfig";
 import { DocumentReference } from "firebase-admin/firestore";
 import { QuerySnapshot } from "firebase-admin/firestore";
 
-export const addDocument = async (): Promise<void> => {
-    // Create a reference to a document in the 'users' collection with ID 'user1'
-    // If the document doesn't exist, it will be created
-    const docRef: DocumentReference = db.collection("users").doc("user1");
-
-    // Use the `set` method to add or overwrite data in the document
-    // The data is passed as an object with fields and their values
-    await docRef.set({
-        name: "Test Conference",
-        date: new Date(),
-        capacity: 50,
-        registrationCount: 0,
-        status: "active",
-        category: "conference",
+export const addEvent = async (eventData: any): Promise<{ id: string }> => {
+    const currentEvents: QuerySnapshot = await db.collection("events").get();
+    
+    let maxNumber = 0;
+    currentEvents.docs.forEach(doc => {
+        const idParts = doc.id.split("_");
+        if (idParts[0] === "evt" && idParts[1]) {
+            const number = parseInt(idParts[1]);
+            if (number > maxNumber) {
+                maxNumber = number;
+            }
+        }
+    });
+    
+    const newNumber = maxNumber + 1;
+    const newId = `evt_${String(newNumber).padStart(6, "0")}`;
+    
+    const eventRef: DocumentReference = db.collection("events").doc(newId);
+    
+    await eventRef.set({
+        name: eventData.name,
+        date: eventData.date,
+        capacity: eventData.capacity,
+        registrationCount: eventData.registrationCount,
+        status: eventData.status,
+        category: eventData.category,
         createdAt: new Date(),
         updatedAt: new Date(),
     });
-    console.log("Document added");
+    return { id: newId };
 };
 
-const getDocument = async (): Promise<void> => {
-    // Create a reference to a specific document in the 'users' collection
-    const docRef: DocumentReference = db.collection("users").doc("user1");
+export const getAllEvents = async (): Promise<any[]> => {
+    const currentEvents: QuerySnapshot = await db.collection("events").get();
+    
+    const events: any[] = [];
+    currentEvents.docs.forEach(doc => {
+        events.push({
+            id: doc.id,
+            name: doc.data().name,
+            date: doc.data().date,
+            capacity: doc.data().capacity,
+            registrationCount: doc.data().registrationCount,
+            status: doc.data().status,
+            category: doc.data().category,
+            createdAt: doc.data().createdAt,
+            updatedAt: doc.data().updatedAt,
+        });
+    });
+    
+    return events;
+};
 
-    // Use the `get()` method to retrieve the document
-    const doc = await docRef.get();
-
-    // Check if the document exists
-    if (doc.exists) {
-        // `doc.data()` returns an object with all fields in the document
-        console.log("Document data:", doc.data());
-    } else {
-        console.log("No such document!");
+export const getEventById = async (id: string): Promise<any | null> => {
+    const eventRef: DocumentReference = db.collection("events").doc(id);
+    const event = await eventRef.get();
+    
+    if (!event.exists) {
+        return null;
     }
+    
+    return {
+        id: event.id,
+        name: event.data()!.name,
+        date: event.data()!.date,
+        capacity: event.data()!.capacity,
+        registrationCount: event.data()!.registrationCount,
+        status: event.data()!.status,
+        category: event.data()!.category,
+        createdAt: event.data()!.createdAt,
+        updatedAt: event.data()!.updatedAt,
+    };
 };
 
-const getCollection = async (): Promise<void> => {
-    // Retrieve all documents from the 'users' collection
-    // `get()` returns a QuerySnapshot containing all documents in the collection
-    const snapshot: QuerySnapshot = await db.collection("users").get();
-
-    // Iterate through each document in the collection
-    snapshot.forEach((doc) => {
-        // `doc.id` is the document's unique identifier
-        // `doc.data()` returns an object with all fields in the document
-        console.log(doc.id, "=>", doc.data());
-    });
+export const updateEvent = async (id: string, eventData: any): Promise<any | null> => {
+    const eventRef: DocumentReference = db.collection("events").doc(id);
+    const event = await eventRef.get();
+    
+    if (!event.exists) {
+        return null;
+    }
+    
+    const updateData: any = { updatedAt: new Date() };
+    
+    if (eventData.name !== undefined) updateData.name = eventData.name;
+    if (eventData.date !== undefined) updateData.date = eventData.date;
+    if (eventData.capacity !== undefined) updateData.capacity = eventData.capacity;
+    if (eventData.registrationCount !== undefined) updateData.registrationCount = eventData.registrationCount;
+    if (eventData.status !== undefined) updateData.status = eventData.status;
+    if (eventData.category !== undefined) updateData.category = eventData.category;
+    
+    await eventRef.update(updateData);
+    
+    const updatedEvent = await eventRef.get();
+    
+    return {
+        id: updatedEvent.id,
+        name: updatedEvent.data()!.name,
+        date: updatedEvent.data()!.date,
+        capacity: updatedEvent.data()!.capacity,
+        registrationCount: updatedEvent.data()!.registrationCount,
+        status: updatedEvent.data()!.status,
+        category: updatedEvent.data()!.category,
+        createdAt: updatedEvent.data()!.createdAt,
+        updatedAt: updatedEvent.data()!.updatedAt,
+    };
 };
 
-const updateDocument = async (): Promise<void> => {
-    // Create a reference to a specific document in the 'users' collection
-    const docRef: DocumentReference = db.collection("users").doc("user1");
-
-    // Use the `update()` method to modify specific fields in the document
-    // This will only change the specified fields, leaving others untouched
-    await docRef.update({
-        age: 31,
-    });
-    console.log("Document updated");
-};
-
-const deleteDocument = async (): Promise<void> => {
-    // Create a reference to a specific document in the 'users' collection
-    const docRef: DocumentReference = db.collection("users").doc("user1");
-
-    // Use the `delete()` method to remove the document from Firestore
-    await docRef.delete();
-    console.log("Document deleted");
+export const deleteEvent = async (id: string): Promise<boolean> => {
+    const eventRef: DocumentReference = db.collection("events").doc(id);
+    const event = await eventRef.get();
+    
+    if (!event.exists) {
+        return false;
+    }
+    
+    await eventRef.delete();
+    return true;
 };

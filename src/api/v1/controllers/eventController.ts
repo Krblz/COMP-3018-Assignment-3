@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { getAllEventsService, getEventByIdService, createEventService, updateEventService, deleteEventService } from "../services/eventService";
-import { HTTP_STATUS } from "src/constants/httpConstants";
+import { HTTP_STATUS } from "../../../constants/httpConstants";
 import { successResponse } from "../models/responseModel";
 
 export const getAllEvents = (req: Request, res: Response) => {
