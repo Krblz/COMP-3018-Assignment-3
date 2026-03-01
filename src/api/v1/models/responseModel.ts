@@ -6,17 +6,6 @@ export interface ApiResponse<T> {
     code?: string /** An error code, if applicable. */;
 }
 
-export interface PostResponse {
-    id: string;
-    name: string;
-    date: string;
-    capacity: number;
-    registrationCount: number;
-    status: string;
-    category: string;
-    createdAt: string;
-    updatedAt: string;
-}
 /**
  * Creates a success response object.
  * @template T - The type of the data property.
