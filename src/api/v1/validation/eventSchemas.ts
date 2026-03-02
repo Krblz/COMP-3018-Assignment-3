@@ -22,11 +22,10 @@ export const eventSchemas = {
             registrationCount: Joi.number().min(0).max(Joi.ref("capacity")).integer().default(0).messages({
                 "number.max": "Validation error: \"registrationCount\" must be less than or equal to ref:capacity"
             }),
-            status: Joi.string().valid("active", "cancelled", "completed").required().messages({
-                "any.required": "Validation error: \"status\" is required",
+            status: Joi.string().valid("active", "cancelled", "completed").default("active").messages({
                 "any.only": "Validation error: \"status\" must be one of [active, cancelled, completed]"
             }),
-            category: Joi.string().valid("conference", "workshop", "meetup", "seminar", "general").required().messages({
+            category: Joi.string().valid("conference", "workshop", "meetup", "seminar", "general").default("general").messages({
                 "any.required": "Validation error: \"category\" is required",
                 "any.only": "Validation error: \"category\" must be one of [conference, workshop, meetup, seminar, general]"
             })
