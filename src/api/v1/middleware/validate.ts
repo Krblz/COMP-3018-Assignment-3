@@ -1,7 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { ObjectSchema } from "joi";
 
-import { MiddlewareFunction } from "../types/expressTypes";
 import { HTTP_STATUS } from "../../../constants/httpConstants";
 
 interface RequestSchemas {
@@ -27,7 +26,7 @@ interface ValidationOptions {
 export const validateRequest = (
     schemas: RequestSchemas,
     options: ValidationOptions = {}
-): MiddlewareFunction => {
+) => {
     // stripParams - Usually don't strip params as they're route-defined
     const defaultOptions = {
         stripBody: true,
