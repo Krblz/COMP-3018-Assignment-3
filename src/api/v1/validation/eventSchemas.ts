@@ -89,9 +89,10 @@ export const eventSchemas = {
         query: Joi.object({
             page: Joi.number().integer().min(1).default(1),
             limit: Joi.number().integer().min(1).max(100).default(10),
-            userId: Joi.string().optional(),
+            status: Joi.string().valid("active", "cancelled", "completed").optional(),
+            category: Joi.string().valid("conference", "workshop", "meetup", "seminar", "general").optional(),
             sortBy: Joi.string()
-                .valid("createdAt", "updatedAt")
+                .valid("name", "date", "createdAt", "updatedAt")
                 .default("createdAt"),
             sortOrder: Joi.string().valid("asc", "desc").default("desc"),
         }),
