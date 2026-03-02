@@ -13,15 +13,34 @@ export interface EventResponse {
 }
 
 export const toEventResponse = (event: Event): EventResponse => {
+    const safeToISOString = (dateValue: any): string => {
+        if (!dateValue) return new Date().toISOString();
+        
+        try {
+            if (dateValue instanceof Date) {
+                return dateValue.toISOString();
+            }
+            const date = new Date(dateValue);
+            
+            if (isNaN(date.getTime())) {
+                return new Date().toISOString();
+            }
+            
+            return date.toISOString();
+        } catch (error) {
+            return new Date().toISOString();
+        }
+    };
+    
     return {
         id: event.id,
         name: event.name,
-        date: event.date.toISOString(),
+        date: safeToISOString(event.date),
         capacity: event.capacity,
         registrationCount: event.registrationCount,
         status: event.status,
         category: event.category,
-        createdAt: event.createdAt.toISOString(),
-        updatedAt: event.updatedAt.toISOString(),
+        createdAt: safeToISOString(event.createdAt),
+        updatedAt: safeToISOString(event.updatedAt)
     };
 };

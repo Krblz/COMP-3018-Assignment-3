@@ -5,7 +5,7 @@ import { eventSchemas } from "../validation/eventSchemas";
 
 const router: Router = Router();
 
-router.get('/events', validateRequest(eventSchemas.list), getAllEvents);
+router.get('/events', getAllEvents);
 router.get('/events/:id', validateRequest(eventSchemas.getById), getEventById);
 router.post('/events', validateRequest(eventSchemas.create), createEvent);
 router.put('/events/:id', validateRequest(eventSchemas.update), updateEvent);

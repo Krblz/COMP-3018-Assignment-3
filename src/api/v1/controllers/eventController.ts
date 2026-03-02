@@ -10,7 +10,7 @@ export const getAllEvents = async (req: Request, res: Response) => {
         const result = await getAllEventsService();
         const responses = result.events.map(toEventResponse);
 
-        res.status(HTTP_STATUS.OK).json(successResponse({ events: responses, count: result.count }, "Events retrieved"));
+        res.status(HTTP_STATUS.OK).json(successResponse(responses, "Events retrieved", result.count));
         
     } catch (error: unknown) {
         res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ error: "Internal Server Error" });
@@ -39,7 +39,7 @@ export const createEvent = async (req: Request, res: Response) => {
         const result = await createEventService(newEvent)
         
         const response = toEventResponse(result);
-        res.status(200).json(response);
+        res.status(200).json(successResponse(response, "Event created"));
     } catch (error: unknown) {
         res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ error: "Internal Server Error" });
     }
