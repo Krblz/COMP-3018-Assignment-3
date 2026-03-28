@@ -1,6 +1,6 @@
 import express, { Express } from "express";
 import dotenv from "dotenv";
-import { apiHelmetConfig } from "config/apiHelmetConfig";
+import { apiHelmetConfig } from "../config/apiHelmetConfig";
 
 dotenv.config();
 
