@@ -1,5 +1,6 @@
 import express, { Express } from "express";
 import dotenv from "dotenv";
+import { apiHelmetConfig } from "config/apiHelmetConfig";
 
 dotenv.config();
 
@@ -9,6 +10,8 @@ import eventRoutes from "./api/v1/routes/eventRoutes";
 const app: Express = express();
 
 // Define a route
+app.use(apiHelmetConfig);
+
 app.use(express.json());
 app.use("/api/v1", eventRoutes);
 
