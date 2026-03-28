@@ -1,6 +1,8 @@
 import express, { Express } from "express";
 import dotenv from "dotenv";
 import { apiHelmetConfig } from "../config/apiHelmetConfig";
+import { getCorsOptions } from "../config/corsConfig";
+import cors from "cors";
 
 dotenv.config();
 
@@ -11,6 +13,7 @@ const app: Express = express();
 
 // Define a route
 app.use(apiHelmetConfig);
+app.use(cors(getCorsOptions())); 
 
 app.use(express.json());
 app.use("/api/v1", eventRoutes);
