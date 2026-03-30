@@ -1,4 +1,5 @@
 import express, { Express } from "express";
+import setupSwagger from "../config/swagger";
 import dotenv from "dotenv";
 import { apiHelmetConfig } from "../config/apiHelmetConfig";
 import { getCorsOptions } from "../config/corsConfig";
@@ -28,3 +29,5 @@ app.get("/api/v1/health", (req, res) => {
 });
 
 export default app;
+
+setupSwagger(app);
