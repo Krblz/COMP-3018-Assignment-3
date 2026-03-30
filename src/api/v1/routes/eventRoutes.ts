@@ -70,6 +70,8 @@ router.get('/events/:id', validateRequest(eventSchemas.getById), getEventById);
  *           example:
  *             name: "New Event"
  *             date: "2026-03-01"
+ *           schema:
+ *             $ref: '#/components/schemas/CreateEventRequest'
  *     responses:
  *       201:
  *         description: Event created successfully
@@ -79,6 +81,8 @@ router.get('/events/:id', validateRequest(eventSchemas.getById), getEventById);
  *               id: "3"
  *               name: "New Event"
  *               date: "2026-03-01"
+ *             schema:
+ *               $ref: '#/components/schemas/Event'
  *       500:
  *         description: Internal Server Error
  */
